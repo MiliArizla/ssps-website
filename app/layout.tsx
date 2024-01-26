@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Vollkorn } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const vollkorn = Vollkorn({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +16,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={vollkorn.className}>
+        <div className="py-20 bg-cover bg-center bg-[url('../public/banner.jpg')]">
+          <h1 className="py-4 title-banner text-center text-5xl">
+            SSP Spectrum Calculator Through SynSSP and PFANT
+          </h1>
+        </div>
+        {children}
+      </body>
     </html>
   );
 }
