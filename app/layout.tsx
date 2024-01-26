@@ -18,15 +18,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={vollkorn.className}>
-        <div className="py-20 bg-cover bg-center bg-[url('../public/banner.jpg')]">
+        <div className="relative py-20 bg-cover bg-center bg-[url('../public/banner.jpg')]">
           <h1 className="py-4 title-banner text-center text-5xl">
             SSP Spectrum Calculator Through SynSSP and PFANT
           </h1>
+          <h2 className="text-right text-sm absolute bottom-0 right-0">
+            Image Credit: Andromeda Galaxy, NASA/Swift/Stefan Immler (GSFC) and
+            Erin Grand (UMCP)
+          </h2>
         </div>
-        <h2 className="text-right text-sm bottom-0">
-          Image Credit: Andromeda Galaxy, NASA/Swift/Stefan Immler (GSFC) and
-          Erin Grand (UMCP)
-        </h2>
         {children}
       </body>
       <footer
