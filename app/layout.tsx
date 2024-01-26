@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className={vollkorn.className}>
         <div className="relative py-20 bg-cover bg-center bg-[url('../public/banner.jpg')]">
           <h1 className="py-4 title-banner text-center text-5xl">
-            SSP Spectrum Calculator Through SynSSP and PFANT
+            SSP Spectrum Calculator With SynSSP and PFANT
           </h1>
           <h2 className="text-right text-sm absolute bottom-0 right-0">
             Image Credit: Andromeda Galaxy, NASA/Swift/Stefan Immler (GSFC) and
@@ -28,14 +28,14 @@ export default function RootLayout({
           </h2>
         </div>
         {children}
+        <footer
+          className={`${vollkorn.className} container mx-auto absolute bottom inset-x-0`}
+        >
+          <h3 className="text-sm text-center absolute bottom-0 inset-x-0">
+            Disclaimer: This website does not save any personal data
+          </h3>
+        </footer>
       </body>
-      <footer
-        className={`${vollkorn.className} container mx-auto absolute bottom inset-x-0`}
-      >
-        <h3 className="text-sm text-center absolute bottom-0 inset-x-0">
-          Disclaimer: This website does not save any personal data
-        </h3>
-      </footer>
     </html>
   );
 }
