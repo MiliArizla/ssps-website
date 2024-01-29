@@ -12,6 +12,11 @@ export default function Home() {
   const [imfType, setImfType] = useState("");
   const [resolution, setResolution] = useState<number>();
 
+  const elements = ["H", "Li", "Be", "B", "C", "N", "O", "F"];
+  const [abundances, setAbundances] = useState([
+    10.93, 1.05, 1.38, 2.7, 8.55, 7.97, 8.77, 4.56,
+  ]);
+
   return (
     <main className="flex min-h-screen gap-3 flex-col items-center px-24 py-10 w-1/2 mx-auto">
       <input
@@ -45,11 +50,11 @@ export default function Home() {
         onChange={(event) => setDeltaLambda(parseFloat(event.target.value))}
       />
       <select
-        className="input-pretty w-full"
+        className="input-pretty w-full font-bold"
         value={age}
         onChange={(event) => setAge(parseInt(event.target.value))}
       >
-        <option value={0} font-bold={String(0)} disabled>
+        <option value={0} disabled>
           Age (Gyrs)
         </option>
         <option value={8}>8</option>
@@ -68,7 +73,7 @@ export default function Home() {
         onChange={(event) => setImfSlope(parseFloat(event.target.value))}
       ></input>
       <select
-        className="input-pretty w-full"
+        className="input-pretty w-full font-bold"
         value={imfType}
         onChange={(event) => setImfType(event.target.value)}
       >
@@ -87,21 +92,36 @@ export default function Home() {
         type="number"
         value={resolution}
         onChange={(event) => setResolution(parseFloat(event.target.value))}
-      ></input>
+      />
+      <p>Elements and Abundances</p>
+      <div className="flex flex-wrap">
+        {elements.map((element, index) => (
+          <div key={element}>
+            <label className="mr-1">{element}:</label>
+            <input
+              className="placeholder:text-white bg-transparent w-12"
+              value={abundances[index]}
+              type="number"
+              onChange={(event) =>
+                setAbundances(
+                  abundances.with(index, parseFloat(event.target.value))
+                )
+              }
+            />
+          </div>
+        ))}
+      </div>
       <button className="input-pretty w-full font-bold mb-4">Add File</button>
       <div className="w-full flex gap-3 justify-center">
         <button className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold ">
-          {" "}
-          Add Spectrum (Default){" "}
+          Add Spectrum
         </button>
         <button className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold ">
-          {" "}
-          Add Spectrum (Copy){" "}
+          Copy Spectrum
         </button>
       </div>
       <button className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold">
-        {" "}
-        Send{" "}
+        Send
       </button>
     </main>
   );
