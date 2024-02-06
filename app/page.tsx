@@ -11,11 +11,16 @@ export default function Home() {
   const [imfSlope, setImfSlope] = useState<number>();
   const [imfType, setImfType] = useState("");
   const [resolution, setResolution] = useState<number>();
+  const [nms, setNms] = useState<number>(9);
+  const [nrg, setNrg] = useState<number>(6);
+  const [loggcn, setLoggcn] = useState<number>(3);
 
-  const elements = ["H", "Li", "Be", "B", "C", "N", "O", "F"];
-  const [abundances, setAbundances] = useState([
-    10.93, 1.05, 1.38, 2.7, 8.55, 7.97, 8.77, 4.56,
-  ]);
+  const elements = [
+    "[Fe/H], [alpha/Fe]",
+    "[C/Fe], [N/Fe], [O/Fe], [Mg/Fe], [Si/Fe], [Ca/Fe], [Ti/Fe], [Na/Fe],[Al/Fe], [Ba/Fe], [Eu/Fe]",
+    "[C/Fe]_rgb, [N/Fe]_rgb",
+  ];
+  const [abundances, setAbundances] = useState([0, 0, 0]);
 
   return (
     <main className="flex min-h-screen gap-3 flex-col items-center px-24 py-10 w-1/2 mx-auto">
@@ -28,16 +33,22 @@ export default function Home() {
       />
       <div className="w-full flex gap-3 justify-center">
         <input
-          className="input-pretty"
+          className="input-pretty w-full"
           placeholder="λ Initial (Å)"
           type="number"
+          min={3500}
+          max={9999}
+          step={0.1}
           value={initialLambda}
           onChange={(event) => setInitialLambda(parseFloat(event.target.value))}
         />
         <input
-          className="input-pretty"
+          className="input-pretty w-full"
           placeholder="λ Final (Å)"
           type="number"
+          min={3501}
+          max={10000}
+          step={0.1}
           value={finalLambda}
           onChange={(event) => setFinalLambda(parseFloat(event.target.value))}
         />
@@ -70,7 +81,14 @@ export default function Home() {
         placeholder="IMF Slope"
         type="number"
         value={imfSlope}
-        onChange={(event) => setImfSlope(parseFloat(event.target.value))}
+        min={0.3}
+        max={7.0}
+        step={0.1}
+        onChange={(event) =>
+          setImfSlope(
+            Math.max(0.3, Math.min(7, parseFloat(event.target.value)))
+          )
+        }
       ></input>
       <select
         className="input-pretty w-full font-bold"
@@ -80,11 +98,9 @@ export default function Home() {
         <option value={""} disabled>
           IMF Type
         </option>
-        <option value={"bi"}>bi</option>
-        <option value={"ch"}>ch</option>
-        <option value={"kb"}>kb</option>
-        <option value={"ku"}>ku</option>
-        <option value={"un"}>un</option>
+        <option value={"Kroupa"}>Kroupa</option>
+        <option value={"Salpeter"}>Salpeter</option>
+        <option value={"Unimodal"}>Unimodal</option>
       </select>
       <input
         className="input-pretty w-full"
@@ -93,6 +109,51 @@ export default function Home() {
         value={resolution}
         onChange={(event) => setResolution(parseFloat(event.target.value))}
       />
+      <div className="flex w-full items-center">
+        <label className="shrink-0 mr-7">N MS</label>
+        <input
+          className="input-pretty w-full"
+          placeholder="N MS"
+          type="number"
+          min={3}
+          max={20}
+          step={1}
+          value={nms}
+          onChange={(event) =>
+            setNms(Math.max(3, Math.min(20, parseInt(event.target.value))))
+          }
+        />
+      </div>
+      <div className="flex w-full items-center">
+        <label className="shrink-0 mr-7">N RG</label>
+        <input
+          className="input-pretty w-full"
+          placeholder="N RG"
+          type="number"
+          min={3}
+          max={15}
+          step={1}
+          value={nrg}
+          onChange={(event) =>
+            setNrg(Math.max(3, Math.min(15, parseInt(event.target.value))))
+          }
+        />
+      </div>
+      <div className="flex w-full items-center">
+        <label className="shrink-0 mr-2">Logg CN</label>
+        <input
+          className="input-pretty w-full"
+          placeholder="Logg CN"
+          type="number"
+          min={1}
+          max={3}
+          step={1}
+          value={loggcn}
+          onChange={(event) =>
+            setLoggcn(Math.max(1, Math.min(3, parseInt(event.target.value))))
+          }
+        />
+      </div>
       <p>Elements and Abundances</p>
       <div className="flex flex-wrap">
         {elements.map((element, index) => (
