@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { InfoToolTip } from "./InfoTooltip.component";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -53,43 +54,49 @@ export default function Home() {
           onChange={(event) => setFinalLambda(parseFloat(event.target.value))}
         />
       </div>
-      <input
-        className="input-pretty w-full"
-        placeholder="Δλ (Å/pix)"
-        type="number"
-        value={deltaLambda}
-        onChange={(event) => setDeltaLambda(parseFloat(event.target.value))}
-      />
-      <select
-        className="input-pretty w-full font-bold"
-        value={age}
-        onChange={(event) => setAge(parseInt(event.target.value))}
-      >
-        <option value={0} disabled>
-          Age (Gyrs)
-        </option>
-        <option value={8}>8</option>
-        <option value={9}>9</option>
-        <option value={10}>10</option>
-        <option value={11}>11</option>
-        <option value={12}>12</option>
-        <option value={13}>13</option>
-        <option value={14}>14</option>
-      </select>
-      <input
-        className="input-pretty w-full"
-        placeholder="IMF Slope"
-        type="number"
-        value={imfSlope}
-        min={0.3}
-        max={7.0}
-        step={0.1}
-        onChange={(event) =>
-          setImfSlope(
-            Math.max(0.3, Math.min(7, parseFloat(event.target.value)))
-          )
-        }
-      ></input>
+      <InfoToolTip information="Delta Lambda">
+        <input
+          className="input-pretty w-full"
+          placeholder="Δλ (Å/pix)"
+          type="number"
+          value={deltaLambda}
+          onChange={(event) => setDeltaLambda(parseFloat(event.target.value))}
+        />
+      </InfoToolTip>
+      <InfoToolTip information="The ages go from 8 Gyrs to 14 Gyrs">
+        <select
+          className="input-pretty w-full font-bold"
+          value={age}
+          onChange={(event) => setAge(parseInt(event.target.value))}
+        >
+          <option value={0} disabled>
+            Age (Gyrs)
+          </option>
+          <option value={8}>8</option>
+          <option value={9}>9</option>
+          <option value={10}>10</option>
+          <option value={11}>11</option>
+          <option value={12}>12</option>
+          <option value={13}>13</option>
+          <option value={14}>14</option>
+        </select>
+      </InfoToolTip>
+      <InfoToolTip information="Add the IMF Slope the values go from 1 to 7">
+        <input
+          className="input-pretty w-full"
+          placeholder="IMF Slope"
+          type="number"
+          value={imfSlope}
+          min={0.3}
+          max={7.0}
+          step={0.1}
+          onChange={(event) =>
+            setImfSlope(
+              Math.max(0.3, Math.min(7, parseFloat(event.target.value)))
+            )
+          }
+        ></input>
+      </InfoToolTip>
       <select
         className="input-pretty w-full font-bold"
         value={imfType}
@@ -102,58 +109,66 @@ export default function Home() {
         <option value={"Salpeter"}>Salpeter</option>
         <option value={"Unimodal"}>Unimodal</option>
       </select>
-      <input
-        className="input-pretty w-full"
-        placeholder="Resolution (Å)"
-        type="number"
-        value={resolution}
-        onChange={(event) => setResolution(parseFloat(event.target.value))}
-      />
-      <div className="flex w-full items-center">
-        <label className="shrink-0 mr-7">N MS</label>
+      <InfoToolTip information="Add the resolution in Å">
         <input
           className="input-pretty w-full"
-          placeholder="N MS"
+          placeholder="Resolution (Å)"
           type="number"
-          min={3}
-          max={20}
-          step={1}
-          value={nms}
-          onChange={(event) =>
-            setNms(Math.max(3, Math.min(20, parseInt(event.target.value))))
-          }
+          value={resolution}
+          onChange={(event) => setResolution(parseFloat(event.target.value))}
         />
-      </div>
-      <div className="flex w-full items-center">
-        <label className="shrink-0 mr-7">N RG</label>
-        <input
-          className="input-pretty w-full"
-          placeholder="N RG"
-          type="number"
-          min={3}
-          max={15}
-          step={1}
-          value={nrg}
-          onChange={(event) =>
-            setNrg(Math.max(3, Math.min(15, parseInt(event.target.value))))
-          }
-        />
-      </div>
-      <div className="flex w-full items-center">
-        <label className="shrink-0 mr-2">Logg CN</label>
-        <input
-          className="input-pretty w-full"
-          placeholder="Logg CN"
-          type="number"
-          min={1}
-          max={3}
-          step={1}
-          value={loggcn}
-          onChange={(event) =>
-            setLoggcn(Math.max(1, Math.min(3, parseInt(event.target.value))))
-          }
-        />
-      </div>
+      </InfoToolTip>
+      <InfoToolTip information="Add Info here">
+        <div className="flex w-full items-center">
+          <label className="shrink-0 mr-7">N MS</label>
+          <input
+            className="input-pretty w-full"
+            placeholder="N MS"
+            type="number"
+            min={3}
+            max={20}
+            step={1}
+            value={nms}
+            onChange={(event) =>
+              setNms(Math.max(3, Math.min(20, parseInt(event.target.value))))
+            }
+          />
+        </div>
+      </InfoToolTip>
+      <InfoToolTip information="Add Info here">
+        <div className="flex w-full items-center">
+          <label className="shrink-0 mr-7">N RG</label>
+          <input
+            className="input-pretty w-full"
+            placeholder="N RG"
+            type="number"
+            min={3}
+            max={15}
+            step={1}
+            value={nrg}
+            onChange={(event) =>
+              setNrg(Math.max(3, Math.min(15, parseInt(event.target.value))))
+            }
+          />
+        </div>
+      </InfoToolTip>
+      <InfoToolTip information="Add Info here">
+        <div className="flex w-full items-center">
+          <label className="shrink-0 mr-2">Logg CN</label>
+          <input
+            className="input-pretty w-full"
+            placeholder="Logg CN"
+            type="number"
+            min={1}
+            max={3}
+            step={1}
+            value={loggcn}
+            onChange={(event) =>
+              setLoggcn(Math.max(1, Math.min(3, parseInt(event.target.value))))
+            }
+          />
+        </div>
+      </InfoToolTip>
       <p>Elements and Abundances</p>
       <div className="flex flex-wrap">
         {elements.map((element, index) => (
@@ -172,13 +187,36 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <button className="input-pretty w-full font-bold mb-4">Add File</button>
+      <div className="w-full flex items-center mb-4 gap-2">
+        <button className="input-pretty w-full font-bold ">Upload File</button>
+        <span title="Download the example file" className="input-pretty px-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-6 h-6 cursor-pointer"
+          >
+            <path
+              fillRule="evenodd"
+              d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </span>
+      </div>
+
       <div className="w-full flex gap-3 justify-center">
-        <button className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold ">
-          Add Spectrum
+        <button
+          className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold"
+          title="Add a New Spectrum with the default values"
+        >
+          New Spectrum
         </button>
-        <button className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold ">
-          Copy Spectrum
+        <button
+          className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold "
+          title="Add a New Spectrum with the values of your previous spectrum"
+        >
+          Copy Spectrum Parameters
         </button>
       </div>
       <button className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold">
