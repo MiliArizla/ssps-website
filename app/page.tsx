@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { InfoToolTip } from "./InfoTooltip.component";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,8 @@ export default function Home() {
   const [nms, setNms] = useState<number>(9);
   const [nrg, setNrg] = useState<number>(6);
   const [loggcn, setLoggcn] = useState<number>(3);
+
+  const router = useRouter();
 
   const elements = [
     "[Fe/H], [alpha/Fe]",
@@ -219,7 +222,10 @@ export default function Home() {
           Copy Spectrum Parameters
         </button>
       </div>
-      <button className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold">
+      <button
+        className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold"
+        onClick={() => router.push("/spectrumsent")}
+      >
         Send
       </button>
     </main>
