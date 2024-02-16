@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Vollkorn } from "next/font/google";
+import { Vollkorn } from "next/font/google";
 import "./globals.css";
 
-const vollkorn = Vollkorn({ subsets: ["latin"] });
+const vollkorn = Vollkorn({ subsets: ["latin"], variable: "--font-vollkorn" });
 
 export const metadata: Metadata = {
   title: "SSPs-website",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={vollkorn.className}>
+      <body className={`${vollkorn.className} font-serif`}>
         <div className="relative py-20 bg-cover bg-center bg-[url('../public/banner.jpg')]">
           <h1 className="py-4 title-banner text-center text-5xl">
             SSP Model Spectra Calculator
