@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Vollkorn } from "next/font/google";
 import "./globals.css";
+import Link from "next/link";
 
 const vollkorn = Vollkorn({ subsets: ["latin"], variable: "--font-vollkorn" });
 
@@ -19,9 +20,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${vollkorn.className} font-serif`}>
         <div className="relative py-20 bg-cover bg-center bg-[url('../public/banner.jpg')]">
-          <h1 className="py-4 title-banner text-center text-5xl">
-            SSP Model Spectra Calculator
-          </h1>
+          <div className="flex">
+            <Link
+              className="py-4 title-banner text-center text-5xl w-full"
+              href="/"
+            >
+              SSP Model Spectra Calculator
+            </Link>
+          </div>
           <h2 className="text-right text-sm absolute bottom-0 right-0">
             Image Credit: Andromeda Galaxy, NASA/Swift/Stefan Immler (GSFC) and
             Erin Grand (UMCP)
