@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { InfoToolTip } from "./InfoTooltip.component";
 import { useRouter } from "next/navigation";
+import Joi from "joi";
+import { v4 as uuidv4 } from "uuid";
 
 interface Spectrum {
+  id: string;
   initialLambda: number | undefined;
   finalLambda: number | undefined;
   deltaLambda: number | undefined;
@@ -20,21 +23,27 @@ interface Spectrum {
 
 const romanNumber: Array<string> = ["I", "II", "III", "IV", "V", "VI", "VII"];
 
+const emailSchema = Joi.string().email({ tlds: { allow: false } });
+
 export default function Home() {
   const [email, setEmail] = useState("");
-  const [initialLambda, setInitialLambda] = useState<number>(
+  const [initialLambda, setInitialLambda] = useState<number | undefined>(
     "" as unknown as number
   );
-  const [finalLambda, setFinalLambda] = useState<number>(
+  const [finalLambda, setFinalLambda] = useState<number | undefined>(
     "" as unknown as number
   );
-  const [deltaLambda, setDeltaLambda] = useState<number>(
+  const [deltaLambda, setDeltaLambda] = useState<number | undefined>(
     "" as unknown as number
   );
   const [age, setAge] = useState<number>(0);
-  const [imfSlope, setImfSlope] = useState<number>("" as unknown as number);
+  const [imfSlope, setImfSlope] = useState<number | undefined>(
+    "" as unknown as number
+  );
   const [imfType, setImfType] = useState("");
-  const [resolution, setResolution] = useState<number>("" as unknown as number);
+  const [resolution, setResolution] = useState<number | undefined>(
+    "" as unknown as number
+  );
   const [nms, setNms] = useState<number>(9);
   const [nrg, setNrg] = useState<number>(6);
   const [loggcn, setLoggcn] = useState<number>(3);
@@ -43,23 +52,64 @@ export default function Home() {
   const router = useRouter();
 
   const elements = [
-    "[Fe/H], [alpha/Fe]",
-    "[C/Fe], [N/Fe], [O/Fe], [Mg/Fe], [Si/Fe], [Ca/Fe], [Ti/Fe], [Na/Fe],[Al/Fe], [Ba/Fe], [Eu/Fe]",
-    "[C/Fe]_rgb, [N/Fe]_rgb",
+    "[Fe/H]",
+    "[alpha/Fe]",
+    "[C/Fe]",
+    "[N/Fe]",
+    "[O/Fe]",
+    "[Mg/Fe]",
+    "[Si/Fe]",
+    "[Ca/Fe]",
+    "[Ti/Fe]",
+    "[Na/Fe]",
+    "[Al/Fe]",
+    "[Ba/Fe]",
+    "[Eu/Fe]",
+    "[C/Fe]_rgb",
+    "[N/Fe]_rgb",
   ];
-  const [abundances, setAbundances] = useState([0, 0, 0]);
+
+  const [abundances, setAbundances] = useState([
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ]);
+
+  const [selectedSpectrum, setSelectedSpectrum] = useState<
+    string | undefined
+  >();
+
+  const isEmailValid = emailSchema.validate(email).error === undefined;
 
   const valuesAreValid =
+    !isNaN(initialLambda as number) &&
     initialLambda !== ("" as unknown as number) &&
+    !isNaN(finalLambda as number) &&
     finalLambda !== ("" as unknown as number) &&
+    !isNaN(deltaLambda as number) &&
     deltaLambda !== ("" as unknown as number) &&
     age !== 0 &&
-    imfSlope !== ("" as unknown as number) &&
-    imfType !== "" &&
+    ((imfType !== "Unimodal" && imfType !== "") ||
+      (!isNaN(imfSlope as number) && imfSlope !== ("" as unknown as number))) &&
+    !isNaN(resolution as number) &&
     resolution !== ("" as unknown as number);
+
+  function loadSpectrum(spectrum: Spectrum) {
+    setSelectedSpectrum(spectrum.id);
+    setInitialLambda(spectrum.initialLambda);
+    setFinalLambda(spectrum.finalLambda);
+    setDeltaLambda(spectrum.deltaLambda);
+    setAge(spectrum.age);
+    setImfType(spectrum.imfType);
+    setImfSlope(spectrum.imfSlope);
+    setResolution(spectrum.resolution);
+    setNms(spectrum.nms);
+    setNrg(spectrum.nrg);
+    setLoggcn(spectrum.loggcn);
+    setAbundances(spectrum.abundances);
+  }
 
   function addSpectrum(resetData: boolean) {
     const spectrum: Spectrum = {
+      id: uuidv4(),
       initialLambda,
       finalLambda,
       deltaLambda,
@@ -84,16 +134,30 @@ export default function Home() {
       setNms(9);
       setNrg(6);
       setLoggcn(3);
-      setAbundances([0, 0, 0]);
+      setAbundances([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      setSelectedSpectrum(() => undefined);
+    } else {
+      setSelectedSpectrum(spectrum.id);
     }
 
-    setSpectra([...spectra, spectrum]);
+    if (selectedSpectrum && resetData) {
+      const spectrumIndex = spectra.findIndex(
+        (spec) => spec.id === selectedSpectrum
+      );
+
+      const newSpectra = [...spectra];
+      newSpectra[spectrumIndex] = spectrum;
+
+      setSpectra(newSpectra);
+    } else {
+      setSpectra([...spectra, spectrum]);
+    }
   }
 
   return (
     <main className="flex min-h-screen py-10 w-full">
       <div className="w-1/4 flex flex-col pl-20 gap-4">
-        {spectra.map((_, index) => (
+        {spectra.map((spectrum, index) => (
           // <div key="spectra" className="flex items-center justify-between">
           //   <button className=" w-full bg-fuchsia-950 rounded-full px-1 py-4 text-center font-bold hover:shadow-lg hover:shadow-fuchsia-700 transition-shadow duration-500 ease-in-out">
           //     {`Spectrum ${romanNumber[index]}`}
@@ -107,7 +171,7 @@ export default function Home() {
           //     <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
           //   </svg>
           // </div>
-          <div key="spectra" className="relative w-full">
+          <div key={index} className="relative w-full">
             <span
               className="absolute -right-3 cursor-pointer"
               title="Delete Spectrum"
@@ -117,12 +181,22 @@ export default function Home() {
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 className="w-6 h-6 hover:animate-spin"
-                onClick={() => setSpectra(spectra.splice(index, 0))}
+                onClick={() => {
+                  spectra.splice(index, 1);
+                  setSpectra([...spectra]);
+                }}
               >
                 <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
               </svg>
             </span>
-            <button className=" w-full bg-fuchsia-950 rounded-full px-1 py-4 text-center font-bold hover:shadow-lg hover:shadow-fuchsia-700 transition-shadow duration-500 ease-in-out">
+            <button
+              className={`w-full bg-fuchsia-950 rounded-full px-1 py-4 text-center font-bold transition-shadow duration-500 ease-in-out ${
+                spectrum.id === selectedSpectrum
+                  ? "shadow-lg shadow-fuchsia-700"
+                  : ""
+              }`}
+              onClick={() => loadSpectrum(spectrum)}
+            >
               {`Spectrum ${romanNumber[index]}`}
             </button>
           </div>
@@ -187,22 +261,6 @@ export default function Home() {
             <option value={14}>14</option>
           </select>
         </InfoToolTip>
-        <InfoToolTip information="Add the IMF Slope the values go from 1 to 7">
-          <input
-            className="input-pretty w-full"
-            placeholder="IMF Slope"
-            type="number"
-            value={imfSlope}
-            min={0.3}
-            max={7.0}
-            step={0.1}
-            onChange={(event) =>
-              setImfSlope(
-                Math.max(0.3, Math.min(7, parseFloat(event.target.value)))
-              )
-            }
-          ></input>
-        </InfoToolTip>
         <select
           className="input-pretty w-full font-bold"
           value={imfType}
@@ -215,6 +273,24 @@ export default function Home() {
           <option value={"Salpeter"}>Salpeter</option>
           <option value={"Unimodal"}>Unimodal</option>
         </select>
+        {imfType === "Unimodal" && (
+          <InfoToolTip information="Add the IMF Slope the values go from 1 to 7">
+            <input
+              className="input-pretty w-full"
+              placeholder="IMF Slope"
+              type="number"
+              value={imfSlope}
+              min={0.3}
+              max={7.0}
+              step={0.1}
+              onChange={(event) =>
+                setImfSlope(
+                  Math.max(0.3, Math.min(7, parseFloat(event.target.value)))
+                )
+              }
+            ></input>
+          </InfoToolTip>
+        )}
         <InfoToolTip information="Add the resolution in Å">
           <input
             className="input-pretty w-full"
@@ -333,7 +409,7 @@ export default function Home() {
             </button>
           </div>
         )}
-        {spectra.length >= 1 && email && (
+        {spectra.length >= 1 && isEmailValid && (
           <button
             className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold"
             onClick={() => router.push("/spectrumsent")}
