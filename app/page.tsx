@@ -145,10 +145,14 @@ export default function Home() {
         (spec) => spec.id === selectedSpectrum
       );
 
-      const newSpectra = [...spectra];
-      newSpectra[spectrumIndex] = spectrum;
+      if (spectrumIndex !== -1) {
+        const newSpectra = [...spectra];
+        newSpectra[spectrumIndex] = spectrum;
 
-      setSpectra(newSpectra);
+        setSpectra(newSpectra);
+      } else {
+        setSpectra([...spectra, spectrum]);
+      }
     } else {
       setSpectra([...spectra, spectrum]);
     }
