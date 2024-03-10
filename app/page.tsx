@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { InfoToolTip } from "./InfoTooltip.component";
+import { InfoToolTip2 } from "./InfoTooltip2.component";
 import { useRouter } from "next/navigation";
 import Joi from "joi";
 import { v4 as uuidv4 } from "uuid";
@@ -18,7 +19,9 @@ interface Spectrum {
   nms: number;
   nrg: number;
   loggcn: number;
-  abundances: Array<number>;
+  abundances1: Array<number>;
+  abundances2: Array<number>;
+  abundances3: Array<number>;
 }
 
 const romanNumber: Array<string> = ["I", "II", "III", "IV", "V", "VI", "VII"];
@@ -51,9 +54,9 @@ export default function Home() {
 
   const router = useRouter();
 
-  const elements = [
-    "[Fe/H]",
-    "[alpha/Fe]",
+  const elements1 = ["[Fe/H]", "[alpha/Fe]"];
+
+  const elements2 = [
     "[C/Fe]",
     "[N/Fe]",
     "[O/Fe]",
@@ -65,13 +68,17 @@ export default function Home() {
     "[Al/Fe]",
     "[Ba/Fe]",
     "[Eu/Fe]",
-    "[C/Fe]_rgb",
-    "[N/Fe]_rgb",
   ];
 
-  const [abundances, setAbundances] = useState([
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  const elements3 = ["[C/Fe]_rgb", "[N/Fe]_rgb"];
+
+  const [abundances1, setAbundances1] = useState([0, 0]);
+
+  const [abundances2, setAbundances2] = useState([
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   ]);
+
+  const [abundances3, setAbundances3] = useState([0, 0]);
 
   const [selectedSpectrum, setSelectedSpectrum] = useState<
     string | undefined
@@ -92,6 +99,22 @@ export default function Home() {
     !isNaN(resolution as number) &&
     resolution !== ("" as unknown as number);
 
+  function defaultValues() {
+    setInitialLambda(8000);
+    setFinalLambda(9000);
+    setDeltaLambda(0.1);
+    setAge(12);
+    setImfType("Salpeter");
+    setImfSlope(undefined);
+    setResolution(0.5);
+    setNms(9);
+    setNrg(6);
+    setLoggcn(3);
+    setAbundances1([0, 0]);
+    setAbundances2([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    setAbundances3([0, 0]);
+  }
+
   function loadSpectrum(spectrum: Spectrum) {
     setSelectedSpectrum(spectrum.id);
     setInitialLambda(spectrum.initialLambda);
@@ -104,7 +127,9 @@ export default function Home() {
     setNms(spectrum.nms);
     setNrg(spectrum.nrg);
     setLoggcn(spectrum.loggcn);
-    setAbundances(spectrum.abundances);
+    setAbundances1(spectrum.abundances1);
+    setAbundances2(spectrum.abundances2);
+    setAbundances3(spectrum.abundances3);
   }
 
   function addSpectrum(resetData: boolean) {
@@ -120,7 +145,9 @@ export default function Home() {
       nms,
       nrg,
       loggcn,
-      abundances,
+      abundances1,
+      abundances2,
+      abundances3,
     };
 
     if (resetData) {
@@ -134,7 +161,9 @@ export default function Home() {
       setNms(9);
       setNrg(6);
       setLoggcn(3);
-      setAbundances([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      setAbundances1([0, 0]);
+      setAbundances2([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+      setAbundances3([0, 0]);
       setSelectedSpectrum(() => undefined);
     } else {
       setSelectedSpectrum(spectrum.id);
@@ -214,166 +243,235 @@ export default function Home() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
         />
-        <div className="w-full flex gap-3 justify-center">
-          <input
-            className="input-pretty w-full"
-            placeholder="λ Initial (Å)"
-            type="number"
-            min={3500}
-            max={9999}
-            step={0.1}
-            value={initialLambda}
-            onChange={(event) =>
-              setInitialLambda(parseFloat(event.target.value))
-            }
-          />
-          <input
-            className="input-pretty w-full"
-            placeholder="λ Final (Å)"
-            type="number"
-            min={3501}
-            max={10000}
-            step={0.1}
-            value={finalLambda}
-            onChange={(event) => setFinalLambda(parseFloat(event.target.value))}
-          />
-        </div>
-        <InfoToolTip information="Delta Lambda">
-          <input
-            className="input-pretty w-full"
-            placeholder="Δλ (Å/pix)"
-            type="number"
-            value={deltaLambda}
-            onChange={(event) => setDeltaLambda(parseFloat(event.target.value))}
-          />
-        </InfoToolTip>
-        <InfoToolTip information="The ages go from 8 Gyrs to 14 Gyrs">
-          <select
-            className="input-pretty w-full font-bold"
-            value={age}
-            onChange={(event) => setAge(parseInt(event.target.value))}
-          >
-            <option value={0} disabled>
-              Age (Gyrs)
-            </option>
-            <option value={8}>8</option>
-            <option value={9}>9</option>
-            <option value={10}>10</option>
-            <option value={11}>11</option>
-            <option value={12}>12</option>
-            <option value={13}>13</option>
-            <option value={14}>14</option>
-          </select>
-        </InfoToolTip>
-        <select
-          className="input-pretty w-full font-bold"
-          value={imfType}
-          onChange={(event) => setImfType(event.target.value)}
-        >
-          <option value={""} disabled>
-            IMF Type
-          </option>
-          <option value={"Kroupa"}>Kroupa</option>
-          <option value={"Salpeter"}>Salpeter</option>
-          <option value={"Unimodal"}>Unimodal</option>
-        </select>
-        {imfType === "Unimodal" && (
-          <InfoToolTip information="Add the IMF Slope the values go from 1 to 7">
+        <div className="w-full flex gap-7 justify-center">
+          <div className="w-full flex items-center gap-0">
+            <label className="shrink-0 mr-1">λ Initial (Å)</label>
             <input
               className="input-pretty w-full"
-              placeholder="IMF Slope"
+              placeholder="λ Initial (Å)"
               type="number"
-              value={imfSlope}
-              min={0.3}
-              max={7.0}
+              min={3500}
+              max={9999}
               step={0.1}
+              value={initialLambda}
               onChange={(event) =>
-                setImfSlope(
-                  Math.max(0.3, Math.min(7, parseFloat(event.target.value)))
-                )
+                setInitialLambda(parseFloat(event.target.value))
               }
-            ></input>
+            />
+          </div>
+          <div className="w-full flex items-center gap-0">
+            <label className="shrink-0 mr-1">λ Final (Å)</label>
+            <input
+              className="input-pretty w-full"
+              placeholder="λ Final (Å)"
+              type="number"
+              min={3501}
+              max={10000}
+              step={0.1}
+              value={finalLambda}
+              onChange={(event) =>
+                setFinalLambda(parseFloat(event.target.value))
+              }
+            />
+          </div>
+        </div>
+        <InfoToolTip information="Delta Lambda">
+          <div className="w-full flex items-center gap-2">
+            <label className="shrink-0 mr-1">Δλ (Å/pix)</label>
+            <input
+              className="input-pretty w-full"
+              placeholder="Δλ (Å/pix)"
+              type="number"
+              value={deltaLambda}
+              onChange={(event) =>
+                setDeltaLambda(parseFloat(event.target.value))
+              }
+            />
+          </div>
+        </InfoToolTip>
+        <InfoToolTip information="The ages go from 8 Gyrs to 14 Gyrs">
+          <div className="w-full flex items-center gap-2">
+            <label className="shrink-0 mr-1">Age (Gyrs)</label>
+            <select
+              className="input-pretty w-full font-bold"
+              value={age}
+              onChange={(event) => setAge(parseInt(event.target.value))}
+            >
+              <option value={0} disabled>
+                Age (Gyrs)
+              </option>
+              <option value={8}>8</option>
+              <option value={9}>9</option>
+              <option value={10}>10</option>
+              <option value={11}>11</option>
+              <option value={12}>12</option>
+              <option value={13}>13</option>
+              <option value={14}>14</option>
+            </select>
+          </div>
+        </InfoToolTip>
+        <div className="w-full flex items-center gap-2">
+          <label className="shrink-0 mr-1">IMF Type</label>
+          <select
+            className="input-pretty w-full font-bold"
+            value={imfType}
+            onChange={(event) => setImfType(event.target.value)}
+          >
+            <option value={""} disabled>
+              IMF Type
+            </option>
+            <option value={"Kroupa"}>Kroupa</option>
+            <option value={"Salpeter"}>Salpeter</option>
+            <option value={"Unimodal"}>Unimodal</option>
+          </select>
+        </div>
+        {imfType === "Unimodal" && (
+          <InfoToolTip information="Add the IMF Slope the values go from 1 to 7">
+            <div className="w-full flex items-center gap-2">
+              <label className="shrink-0 mr-1">IMF Slope</label>
+              <input
+                className="input-pretty w-full"
+                placeholder="IMF Slope"
+                type="number"
+                value={imfSlope}
+                min={0.3}
+                max={7.0}
+                step={0.1}
+                onChange={(event) =>
+                  setImfSlope(
+                    Math.max(0.3, Math.min(7, parseFloat(event.target.value)))
+                  )
+                }
+              ></input>
+            </div>
           </InfoToolTip>
         )}
         <InfoToolTip information="Add the resolution in Å">
-          <input
-            className="input-pretty w-full"
-            placeholder="Resolution (Å)"
-            type="number"
-            value={resolution}
-            onChange={(event) => setResolution(parseFloat(event.target.value))}
-          />
-        </InfoToolTip>
-        <InfoToolTip information="Add Info here">
-          <div className="flex w-full items-center">
-            <label className="shrink-0 mr-7">N MS</label>
+          <div className="w-full flex items-center gap-2 ">
+            <label className="shrink-0 mr-1">Resolution (Å)</label>
             <input
               className="input-pretty w-full"
-              placeholder="N MS"
+              placeholder="Resolution (Å)"
               type="number"
-              min={3}
-              max={20}
-              step={1}
-              value={nms}
+              value={resolution}
               onChange={(event) =>
-                setNms(Math.max(3, Math.min(20, parseInt(event.target.value))))
+                setResolution(parseFloat(event.target.value))
               }
             />
           </div>
         </InfoToolTip>
-        <InfoToolTip information="Add Info here">
-          <div className="flex w-full items-center">
-            <label className="shrink-0 mr-7">N RG</label>
-            <input
-              className="input-pretty w-full"
-              placeholder="N RG"
-              type="number"
-              min={3}
-              max={15}
-              step={1}
-              value={nrg}
-              onChange={(event) =>
-                setNrg(Math.max(3, Math.min(15, parseInt(event.target.value))))
-              }
-            />
-          </div>
-        </InfoToolTip>
-        <InfoToolTip information="Add Info here">
-          <div className="flex w-full items-center">
-            <label className="shrink-0 mr-2">Logg CN</label>
-            <input
-              className="input-pretty w-full"
-              placeholder="Logg CN"
-              type="number"
-              min={1}
-              max={3}
-              step={1}
-              value={loggcn}
-              onChange={(event) =>
-                setLoggcn(
-                  Math.max(1, Math.min(3, parseInt(event.target.value)))
-                )
-              }
-            />
-          </div>
-        </InfoToolTip>
-        <p>Elements and Abundances</p>
-        <div className="flex flex-wrap">
-          {elements.map((element, index) => (
-            <div key={element}>
-              <label className="mr-1">{element}:</label>
+        <div className="w-full flex gap-7 justify-center items-center">
+          <InfoToolTip2 information="Add Info here">
+            <div className="flex w-full items-center">
+              <label className="shrink-0 mr-2">N MS</label>
               <input
-                className="placeholder:text-white bg-transparent w-12"
-                value={abundances[index]}
+                className="input-pretty px-1"
+                placeholder="N MS"
                 type="number"
+                min={3}
+                max={20}
+                step={1}
+                value={nms}
                 onChange={(event) =>
-                  setAbundances(
-                    abundances.with(index, parseFloat(event.target.value))
+                  setNms(
+                    Math.max(3, Math.min(20, parseInt(event.target.value)))
                   )
                 }
               />
             </div>
-          ))}
+          </InfoToolTip2>
+          <InfoToolTip2 information="Add Info here">
+            <div className="flex w-full items-center">
+              <label className="shrink-0 mr-2">N RG</label>
+              <input
+                className="input-pretty px-1"
+                placeholder="N RG"
+                type="number"
+                min={3}
+                max={15}
+                step={1}
+                value={nrg}
+                onChange={(event) =>
+                  setNrg(
+                    Math.max(3, Math.min(15, parseInt(event.target.value)))
+                  )
+                }
+              />
+            </div>
+          </InfoToolTip2>
+          <InfoToolTip information="Add Info here">
+            <div className="flex w-full items-center">
+              <label className="shrink-0 mr-2">Logg CN</label>
+              <input
+                className="input-pretty w-full"
+                placeholder="Logg CN"
+                type="number"
+                min={1}
+                max={3}
+                step={1}
+                value={loggcn}
+                onChange={(event) =>
+                  setLoggcn(
+                    Math.max(1, Math.min(3, parseInt(event.target.value)))
+                  )
+                }
+              />
+            </div>
+          </InfoToolTip>
+        </div>
+        <p>Elements and Abundances</p>
+        <div className="flex flex-wrap">
+          <div className="flex-col">
+            {elements1.map((element1, index) => (
+              <div key={element1}>
+                <label className="mr-1">{element1}:</label>
+                <input
+                  className="placeholder:text-white bg-transparent w-12"
+                  value={abundances1[index]}
+                  type="number"
+                  onChange={(event) =>
+                    setAbundances1(
+                      abundances1.with(index, parseFloat(event.target.value))
+                    )
+                  }
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            {elements2.map((element2, index) => (
+              <div key={element2}>
+                <label className="mr-1">{element2}:</label>
+                <input
+                  className="placeholder:text-white bg-transparent w-12"
+                  value={abundances2[index]}
+                  type="number"
+                  onChange={(event) =>
+                    setAbundances2(
+                      abundances2.with(index, parseFloat(event.target.value))
+                    )
+                  }
+                />
+              </div>
+            ))}
+          </div>
+          <div>
+            {elements3.map((element3, index) => (
+              <div key={element3}>
+                <label className="mr-1">{element3}:</label>
+                <input
+                  className="placeholder:text-white bg-transparent w-12"
+                  value={abundances3[index]}
+                  type="number"
+                  onChange={(event) =>
+                    setAbundances3(
+                      abundances3.with(index, parseFloat(event.target.value))
+                    )
+                  }
+                />
+              </div>
+            ))}
+          </div>
         </div>
         <div className="w-full flex items-center mb-4 gap-2">
           <button className="input-pretty w-full font-bold ">
@@ -421,6 +519,14 @@ export default function Home() {
             Send
           </button>
         )}
+      </div>
+      <div>
+        <button
+          className=" bg-purple-900 rounded-full py-4 px-10 text-white text-center font-bold hover:shadow-lg hover:shadow-fuchsia-700"
+          onClick={() => defaultValues()}
+        >
+          Set Default Values
+        </button>
       </div>
     </main>
   );
