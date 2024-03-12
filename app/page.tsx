@@ -403,7 +403,7 @@ export default function Home() {
             <div className="flex w-full items-center">
               <label className="shrink-0 mr-2">Logg CN</label>
               <input
-                className="input-pretty w-full"
+                className="input-pretty grow"
                 placeholder="Logg CN"
                 type="number"
                 min={1}
@@ -500,14 +500,14 @@ export default function Home() {
               title="Add a New Spectrum with the default values"
               onClick={() => addSpectrum(true)}
             >
-              Save Spectrum
+              Save Current Spectrum
             </button>
             <button
               className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold "
               title="Add a New Spectrum with the values of your current spectrum"
               onClick={() => addSpectrum(false)}
             >
-              Copy Spectrum
+              Add New Spectrum
             </button>
           </div>
         )}
