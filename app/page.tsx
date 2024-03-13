@@ -275,7 +275,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <InfoToolTip information="Delta Lambda">
+        <InfoToolTip information="Sampling Delta lambda">
           <div className="w-full flex items-center gap-2">
             <label className="shrink-0 mr-1">Δλ (Å/pix)</label>
             <input
@@ -289,7 +289,7 @@ export default function Home() {
             />
           </div>
         </InfoToolTip>
-        <InfoToolTip information="The ages go from 8 Gyrs to 14 Gyrs">
+        <InfoToolTip information="Age of the stellar population">
           <div className="w-full flex items-center gap-2">
             <label className="shrink-0 mr-1">Age (Gyrs)</label>
             <select
@@ -346,7 +346,7 @@ export default function Home() {
             </div>
           </InfoToolTip>
         )}
-        <InfoToolTip information="Add the resolution in Å">
+        <InfoToolTip information="Spectral resolution (FWHM)">
           <div className="w-full flex items-center gap-2 ">
             <label className="shrink-0 mr-1">Resolution (Å)</label>
             <input
@@ -360,10 +360,10 @@ export default function Home() {
             />
           </div>
         </InfoToolTip>
-        <div className="w-full flex gap-7 justify-center items-center">
-          <InfoToolTip2 information="Add Info here">
-            <div className="flex w-full items-center">
-              <label className="shrink-0 mr-2">N MS</label>
+        <div className="w-full flex gap-7 justify-evenly items-center">
+          <InfoToolTip2 information="Number of main sequence stars">
+            <div className="flex gap-2 w-full items-center">
+              <label>N MS</label>
               <input
                 className="input-pretty px-1"
                 placeholder="N MS"
@@ -380,9 +380,9 @@ export default function Home() {
               />
             </div>
           </InfoToolTip2>
-          <InfoToolTip2 information="Add Info here">
-            <div className="flex w-full items-center">
-              <label className="shrink-0 mr-2">N RG</label>
+          <InfoToolTip2 information="Number of post-main sequence stars">
+            <div className="flex w-full gap-2 items-center">
+              <label>N RG</label>
               <input
                 className="input-pretty px-1"
                 placeholder="N RG"
@@ -399,11 +399,11 @@ export default function Home() {
               />
             </div>
           </InfoToolTip2>
-          <InfoToolTip information="Add Info here">
-            <div className="flex w-full items-center">
-              <label className="shrink-0 mr-2">Logg CN</label>
+          <InfoToolTip2 information="Stellar surface gravity threshold for C and N enhancement (i.e., stars with logg < logg CN will have [C/Fe]_rgb, [N/Fe]_rgb)">
+            <div className="flex w-full gap-2 items-center">
+              <label>logg CN</label>
               <input
-                className="input-pretty grow"
+                className="input-pretty px-2"
                 placeholder="Logg CN"
                 type="number"
                 min={1}
@@ -417,7 +417,7 @@ export default function Home() {
                 }
               />
             </div>
-          </InfoToolTip>
+          </InfoToolTip2>
         </div>
         <p>Elements and Abundances</p>
         <div className="flex flex-wrap">
@@ -493,21 +493,33 @@ export default function Home() {
           </span>
         </div>
 
-        {spectra.length < 7 && valuesAreValid && (
+        {spectra.length < 7 && valuesAreValid && selectedSpectrum && (
           <div className="w-full flex gap-3 justify-center">
             <button
               className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold"
               title="Add a New Spectrum with the default values"
               onClick={() => addSpectrum(true)}
             >
-              Save Current Spectrum
+              Update Selected Spectrum
             </button>
             <button
               className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold "
               title="Add a New Spectrum with the values of your current spectrum"
               onClick={() => addSpectrum(false)}
             >
-              Add New Spectrum
+              Save parameters as new Spectrum
+            </button>
+          </div>
+        )}
+
+        {spectra.length < 7 && valuesAreValid && !selectedSpectrum && (
+          <div className="w-full flex gap-3 justify-center">
+            <button
+              className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold "
+              title="Add a New Spectrum with the values of your current spectrum"
+              onClick={() => addSpectrum(false)}
+            >
+              Save parameters as new Spectrum
             </button>
           </div>
         )}
