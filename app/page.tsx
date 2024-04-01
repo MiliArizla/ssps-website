@@ -187,6 +187,18 @@ export default function Home() {
     }
   }
 
+  function sendSpectra() {
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/synthetic-spectrum`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, spectra }),
+    });
+
+    router.push("/spectrumsent");
+  }
+
   return (
     <main className="flex min-h-screen py-10 w-full">
       <div className="w-1/4 flex flex-col pl-20 gap-4">
@@ -526,7 +538,7 @@ export default function Home() {
         {spectra.length >= 1 && isEmailValid && (
           <button
             className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold"
-            onClick={() => router.push("/spectrumsent")}
+            onClick={sendSpectra}
           >
             Send
           </button>
