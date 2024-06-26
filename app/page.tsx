@@ -99,6 +99,10 @@ export default function Home() {
     !isNaN(resolution as number) &&
     resolution !== ("" as unknown as number);
 
+  const isSendButtonActive = spectra.length >= 1 && isEmailValid;
+  const isSendAndUpdateButtonActiveWithSpectrumSelected = spectra.length < 7 && valuesAreValid && selectedSpectrum
+  const isSendAndUpdateButtonActiveWithoutSpectrumSelected = spectra.length < 7 && valuesAreValid && !selectedSpectrum 
+  
   function defaultValues() {
     setInitialLambda(8000);
     setFinalLambda(9000);
@@ -193,8 +197,23 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, spectra }),
-    });
+      body: JSON.stringify({ email, spectra: spectra.map((spectrum) => ({
+        ...spectrum,
+        initialLambda: spectrum.initialLambda?.toString(),
+        finalLambda: spectrum.finalLambda?.toString(),
+        deltaLambda: spectrum.deltaLambda?.toString(),
+        age: spectrum.age.toString(),
+        imfSlope: spectrum.imfSlope?.toString(),
+        resolution: spectrum.resolution?.toString(),
+        nms: spectrum.nms.toString(),
+        nrg: spectrum.nrg.toString(),
+        loggcn: spectrum.loggcn.toString(),
+        abundances1: spectrum.abundances1.map(String),
+        abundances2: spectrum.abundances2.map(String),
+        abundances3: spectrum.abundances3.map(String),
+      })) }),
+    }
+    );
 
     router.push("/spectrumsent");
   }
@@ -508,41 +527,43 @@ export default function Home() {
         {spectra.length < 7 && valuesAreValid && selectedSpectrum && (
           <div className="w-full flex gap-3 justify-center">
             <button
-              className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold"
+              className={`w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold ${isSendAndUpdateButtonActiveWithSpectrumSelected ? '' : 'opacity-50 cursor-not-allowed'}`}
               title="Add a New Spectrum with the default values"
               onClick={() => addSpectrum(true)}
+              disabled={!isSendAndUpdateButtonActiveWithSpectrumSelected}
             >
               Update Selected Spectrum
             </button>
             <button
-              className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold "
+              className={`w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold ${isSendAndUpdateButtonActiveWithSpectrumSelected ? '' : 'opacity-50 cursor-not-allowed'}`}
               title="Add a New Spectrum with the values of your current spectrum"
               onClick={() => addSpectrum(false)}
+              disabled={!isSendAndUpdateButtonActiveWithSpectrumSelected}
             >
               Save parameters as new Spectrum
             </button>
           </div>
-        )}
+        )} 
 
-        {spectra.length < 7 && valuesAreValid && !selectedSpectrum && (
+        {(spectra.length === 0 || spectra.length === 7) && (
           <div className="w-full flex gap-3 justify-center">
             <button
-              className=" w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold "
+              className={`w-full rounded-full px-4 py-4 text-center font-bold ${isSendAndUpdateButtonActiveWithoutSpectrumSelected ? 'bg-indigo-900' : 'bg-indigo-900 opacity-50 cursor-not-allowed'}`}
               title="Add a New Spectrum with the values of your current spectrum"
               onClick={() => addSpectrum(false)}
+              disabled={!isSendAndUpdateButtonActiveWithoutSpectrumSelected}
             >
               Save parameters as new Spectrum
             </button>
           </div>
         )}
-        {spectra.length >= 1 && isEmailValid && (
           <button
-            className="w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold"
+            className={`w-full rounded-full px-4 py-4 text-center font-bold ${isSendButtonActive ? 'bg-indigo-900' : 'bg-indigo-900 opacity-50 cursor-not-allowed'}`}
             onClick={sendSpectra}
+            disabled={!isSendButtonActive}
           >
             Send
           </button>
-        )}
       </div>
       <div>
         <button
