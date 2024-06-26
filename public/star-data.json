@@ -1,0 +1,15 @@
+{
+  "initialLambda" : "",
+  "finalLambda" : "",
+  "deltaLambda" : "",
+  "age" : "",
+  "imfType" : "",
+  "imfSlope": "",
+  "resolution": "",
+  "nms":"9",
+  "nrg":6,
+  "loggcn":3,
+  "abundances1": [0, 0],
+  "abundances2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "abundances3": [0, 0]
+}

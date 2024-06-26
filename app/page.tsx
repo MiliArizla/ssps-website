@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { InfoToolTip } from "./InfoTooltip.component";
 import { InfoToolTip2 } from "./InfoTooltip2.component";
 import { useRouter } from "next/navigation";
@@ -103,6 +103,30 @@ export default function Home() {
   const isSendAndUpdateButtonActiveWithSpectrumSelected = spectra.length < 7 && valuesAreValid && selectedSpectrum
   const isSendAndUpdateButtonActiveWithoutSpectrumSelected = spectra.length < 7 && valuesAreValid && !selectedSpectrum 
   
+  function parseUploadedFile(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target.files) return;
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (!event.target) return;
+      const data = JSON.parse(event.target.result as string);
+      setInitialLambda(data.initialLambda);
+      setFinalLambda(data.finalLambda);
+      setDeltaLambda(data.deltaLambda);
+      setAge(data.age);
+      setImfType(data.imfType);
+      setImfSlope(data.imfSlope);
+      setResolution(data.resolution);
+      setNms(data.nms);
+      setNrg(data.nrg);
+      setLoggcn(data.loggcn);
+      setAbundances1(data.abundances1);
+      setAbundances2(data.abundances2);
+      setAbundances3(data.abundances3);
+    };
+    reader.readAsText(file)
+  }
+
   function defaultValues() {
     setInitialLambda(8000);
     setFinalLambda(9000);
@@ -505,22 +529,28 @@ export default function Home() {
           </div>
         </div>
         <div className="w-full flex items-center mb-4 gap-2">
-          <button className="input-pretty w-full font-bold ">
-            Upload File
-          </button>
+          <form className="input-pretty w-full font-bold ">
+            <label className="custom-file-upload">
+              <input type="file" style={{display: 'none'}} name="filename" onChange={parseUploadedFile}/>
+              Upload File
+            </label> 
+          </form>
+
           <span title="Download the example file" className="input-pretty px-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-6 h-6 cursor-pointer"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <a href="../star-data.json" download>  
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6 cursor-pointer"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </a>
           </span>
         </div>
 
