@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
+
 
 body {
   background: linear-gradient(0deg, rgb(79, 39, 97) 0%, rgb(4, 9, 70) 100%);
@@ -8,6 +10,11 @@ body {
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
 }
+
+.font-vollkorn {
+  font-family: 'Vollkorn', serif;
+}
+
 .title-banner {
   background: linear-gradient(
     0deg,
