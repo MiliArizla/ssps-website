@@ -605,13 +605,23 @@ export default function Home() {
             Send
           </button>
       </div>
-      <div>
-        <button
-          className=" bg-purple-900 rounded-full py-4 px-10 text-white text-center font-bold hover:shadow-lg hover:shadow-fuchsia-700"
-          onClick={() => defaultValues()}
-        >
-          Set Default Values
-        </button>
+      <div className="flex flex-col gap-7 items-center ">
+        <div>
+          <button
+            className=" bg-purple-900 rounded-full py-4 px-10 text-white text-center font-bold hover:shadow-lg hover:shadow-fuchsia-700"
+            onClick={() => defaultValues()}
+          >
+            Set Default Values
+          </button>
+        </div>
+        <div>
+          <a
+            href="https://drive.google.com/file/d/1efUcM5DuBckI2OP1U7LvIDaWvvKmMFRj/view"
+            target="_blank"
+            className=" bg-purple-900 rounded-full py-4 px-10 text-white text-center font-bold hover:shadow-lg hover:shadow-fuchsia-700"        >
+            Website Manual 
+          </a>
+        </div>
       </div>
     </main>
   );
