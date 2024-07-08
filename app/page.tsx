@@ -305,13 +305,15 @@ export default function Home() {
               className="input-pretty w-full"
               placeholder="λ Initial (Å)"
               type="number"
-              min={3500}
-              max={9999}
-              step={0.1}
               value={initialLambda}
               onChange={(event) =>
                 setInitialLambda(parseFloat(event.target.value))
               }
+              onBlur={() => {
+                if (initialLambda !== undefined && (initialLambda as unknown as string) !== "") {
+                  setInitialLambda(parseFloat(Math.max(Math.min(9999, initialLambda), 3500).toFixed(1)));
+                }
+              }}
             />
           </div>
           <div className="w-full flex items-center gap-0">
@@ -320,13 +322,15 @@ export default function Home() {
               className="input-pretty w-full"
               placeholder="λ Final (Å)"
               type="number"
-              min={3501}
-              max={10000}
-              step={0.1}
               value={finalLambda}
               onChange={(event) =>
                 setFinalLambda(parseFloat(event.target.value))
               }
+              onBlur={() => {
+                if (finalLambda !== undefined && (finalLambda as unknown as string) !== "") {
+                  setFinalLambda(parseFloat(Math.max(Math.min(10000, finalLambda), 3501).toFixed(1)));
+                }
+              }}
             />
           </div>
         </div>
@@ -428,10 +432,13 @@ export default function Home() {
                 step={1}
                 value={nms}
                 onChange={(event) =>
-                  setNms(
-                    Math.max(3, Math.min(20, parseInt(event.target.value)))
-                  )
+                  setNms(parseInt(event.target.value))
                 }
+                onBlur={() => {
+                  if (nms !== undefined && (nms as unknown as string) !=="") {
+                    setNms(parseInt(Math.max(Math.min(20, nms),3).toFixed(1)));
+                  }
+                }}
               />
             </div>
           </InfoToolTip2>
@@ -447,10 +454,13 @@ export default function Home() {
                 step={1}
                 value={nrg}
                 onChange={(event) =>
-                  setNrg(
-                    Math.max(3, Math.min(15, parseInt(event.target.value)))
-                  )
+                  setNrg(parseInt(event.target.value))
                 }
+                onBlur={() => {
+                  if (nrg !== undefined && (nrg as unknown as string) !=="") {
+                    setNms(parseInt(Math.max(Math.min(15, nrg),3).toFixed(1)));
+                  }
+                }}
               />
             </div>
           </InfoToolTip2>

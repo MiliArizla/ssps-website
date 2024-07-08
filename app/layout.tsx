@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-vollkorn">
+      <body>
         <div className="relative py-20 bg-cover bg-center bg-[url('../public/banner.jpg')]">
           <div className="flex">
             <Link

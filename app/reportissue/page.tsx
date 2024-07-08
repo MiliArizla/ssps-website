@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function Report() {
   const [email, setEmail] = useState("");
+  const [content, setContent] = useState("");
   const [dialog, setDialog] = useState(false);
   useEffect(() => window.scrollTo(0, 0), []);
   return (
@@ -11,15 +12,21 @@ export default function Report() {
       <span className=" items-center text-center text-2xl">
         We are sorry you did not receive your spectrum!
       </span>
-      <span className=" items-center text-center text-xl">
-        Try again and check if the parameters are according to the info
-        provided, check your email and your spam again, and check if you wrote
-        your email correctly, or try to upload a file with the parameters
-        according to the example that we have on the download option right next
-        to the Upload File button. If your problem persists you can contact us
-        we will respond within 24h.
+      <span className="items-center text-center text-xl">
+        If you received an error email, try again and check that the parameters adhere to the requirements detailed in the manual.
+        If you did not receive an error email, verify that your email is correct and check your inbox and spam folder again.
+        You can also try to upload a file with the parameters according to the example file
+        which you can download using the button next to the Upload File button.
+        If your problem persists you can contact and us we will respond within 24 hours.
       </span>
-      <div className="flex-col flex w-full items-center gap-3 mt-5">
+      {/* <span className="items-center text-center text-2xl">
+        If you did not receive an error email, there is a chance the email provided is incorrect. 
+        If you did receive a error email, check that your spectrum is within the right limits.
+      </span> */}
+      <span className="items-center text-center text-3xl">
+        If your problem persists, send us an email at sspswebsite@gmail.com
+      </span>
+      {/* <div className="flex-col flex w-full items-center gap-3 mt-5">
         <input
           className="w-1/2 self-start bg-indigo-900 rounded-full px-4 py-4 placeholder:text-white placeholder:text-center placeholder:font-bold"
           placeholder="Email"
@@ -59,7 +66,7 @@ export default function Report() {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
     </main>
   );
 }
