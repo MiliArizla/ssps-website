@@ -100,8 +100,8 @@ export default function Home() {
     resolution !== ("" as unknown as number);
 
   const isSendButtonActive = spectra.length >= 1 && isEmailValid;
-  const isSendAndUpdateButtonActiveWithSpectrumSelected = spectra.length < 7 && valuesAreValid && selectedSpectrum
-  const isSendAndUpdateButtonActiveWithoutSpectrumSelected = spectra.length < 7 && valuesAreValid && !selectedSpectrum 
+  const isSendAndUpdateButtonActiveWithSpectrumSelected = spectra.length < 5 && valuesAreValid && selectedSpectrum
+  const isSendAndUpdateButtonActiveWithoutSpectrumSelected = spectra.length < 5 && valuesAreValid && !selectedSpectrum 
   
   function parseUploadedFile(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return;
@@ -128,8 +128,8 @@ export default function Home() {
   }
 
   function defaultValues() {
-    setInitialLambda(8000);
-    setFinalLambda(9000);
+    setInitialLambda(5000);
+    setFinalLambda(5100);
     setDeltaLambda(0.1);
     setAge(12);
     setImfType("Salpeter");
@@ -564,7 +564,7 @@ export default function Home() {
           </span>
         </div>
 
-        {spectra.length < 7 && valuesAreValid && selectedSpectrum && (
+        {spectra.length < 5 && valuesAreValid && selectedSpectrum && (
           <div className="w-full flex gap-3 justify-center">
             <button
               className={`w-full bg-indigo-900 rounded-full px-4 py-4 text-center font-bold ${isSendAndUpdateButtonActiveWithSpectrumSelected ? '' : 'opacity-50 cursor-not-allowed'}`}
@@ -585,7 +585,7 @@ export default function Home() {
           </div>
         )} 
 
-        {(spectra.length === 0 || spectra.length === 7) && (
+        {(spectra.length === 0 || spectra.length === 5) && (
           <div className="w-full flex gap-3 justify-center">
             <button
               className={`w-full rounded-full px-4 py-4 text-center font-bold ${isSendAndUpdateButtonActiveWithoutSpectrumSelected ? 'bg-indigo-900' : 'bg-indigo-900 opacity-50 cursor-not-allowed'}`}
@@ -598,7 +598,7 @@ export default function Home() {
           </div>
         )}
           <button
-            className={`w-full rounded-full px-4 py-4 text-center font-bold ${isSendButtonActive ? 'bg-indigo-900' : 'bg-indigo-900 opacity-50 cursor-not-allowed'}`}
+            className={`w-full rounded-full px-4 py-4 mb-8 text-center font-bold ${isSendButtonActive ? 'bg-indigo-900' : 'bg-indigo-900 opacity-50 cursor-not-allowed'}`}
             onClick={sendSpectra}
             disabled={!isSendButtonActive}
           >

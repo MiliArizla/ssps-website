@@ -37,9 +37,14 @@ export default function RootLayout({
         <footer
           className={`${vollkorn.className} container mx-auto absolute bottom inset-x-0`}
         >
-          <h3 className="text-sm text-center absolute bottom-0 inset-x-0">
-            Disclaimer: This website does not save any personal data
-          </h3>
+          <div className="absolute bottom-0 inset-x-0">
+            <h3 className="text-sm text-center">
+              Disclaimer: This website does not save any personal data
+            </h3>
+            <h3 className="text-sm text-center">
+              Website developed by: github.com/MiliArizla
+            </h3>
+          </div>
         </footer>
       </body>
     </html>
