@@ -42,7 +42,7 @@ export default function RootLayout({
               Disclaimer: This website does not save any personal data
             </h3>
             <h3 className="text-sm text-center">
-              Website developed by: github.com/MiliArizla
+              Website developed by: Milena Arizla Menezes Steinhorst
             </h3>
           </div>
         </footer>
